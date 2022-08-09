@@ -17,7 +17,7 @@ class DataManager():
                 
     def Load_DataLoader(self, dataset, batch_size, is_train):
         if is_train == True:
-            return DataLoader(dataset, batch_size=batch_size, shuffle=True, pin_memory=False, drop_last=True)
+            return DataLoader(dataset, batch_size=batch_size, shuffle=True, pin_memory=False, drop_last=False)
         else:
             return DataLoader(dataset, batch_size=batch_size, shuffle=False, pin_memory=False, drop_last=False)
 
@@ -32,7 +32,7 @@ class CT_dataset(Dataset):
     
     def __getitem__(self, idx):
         X = torch.tensor(self.X[idx,:]).float()
-        Y = torch.tensor(self.Y[idx,:]).long()
+        Y = torch.tensor(self.Y[idx,:]).float()
         return X, Y
     
 if __name__ == '__main__':
