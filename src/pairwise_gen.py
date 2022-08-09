@@ -31,7 +31,7 @@ for i in range(len(keys)):
             Y.append(0)
 
 X = np.array(X)
-Y = np.array(Y)
+Y = np.array(Y).reshape(-1, 1)
 np.save('./dataset/X.npy', X)
 np.save('./dataset/Y.npy', Y)
     
