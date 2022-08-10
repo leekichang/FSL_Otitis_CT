@@ -1,6 +1,9 @@
 # Byte-compiled / optimized / DLL files
 dataset/
+dataset_crop_112/
 dataset_original/
+dataset_unlabeled/
+dataset_unlabeled_crop_112/
 venv/
 __pycache__/
 *.py[cod]
