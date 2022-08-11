@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 
-data_path = './dataset/'
+data_path = './datasets/dataset_crop_144/'
 f = open(f'./dataset/dataset_config.txt', 'r')
 lines = f.readlines()
 f.close()
@@ -32,7 +32,7 @@ for i in range(len(keys)):
 
 X = np.array(X)
 Y = np.array(Y).reshape(-1, 1)
-np.save('./dataset/X.npy', X)
-np.save('./dataset/Y.npy', Y)
+np.save(f'{data_path}X.npy', X)
+np.save(f'{data_path}Y.npy', Y)
     
     
