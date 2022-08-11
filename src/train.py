@@ -17,7 +17,7 @@ def parse_args():
     return args
 
 def train(model, optimizer, criterion, trainLoader, LOSS_TRACE):
-    for idx, batch in enumerate(tqdm(trainLoader)):
+    for idx, batch in enumerate(trainLoader):
         optimizer.zero_grad()
         X, Y = batch
         X, Y = X.to(cfg.DEVICE), Y.to(cfg.DEVICE)
@@ -27,7 +27,6 @@ def train(model, optimizer, criterion, trainLoader, LOSS_TRACE):
         LOSS_TRACE.append(LOSS.cpu().detach().numpy())
         LOSS.backward()
         optimizer.step()
-        print(LOSS)
     return LOSS_TRACE
 
 if __name__ == '__main__':
@@ -49,8 +48,9 @@ if __name__ == '__main__':
         LOSS_TRACE = []
         LOSS_TRACE = train(model, optimizer, criterion, trainLoader, LOSS_TRACE)
         AVG_LOSS = np.average(LOSS_TRACE)
+        TB_WRITER.add_scalar(f'{model_name}: Train Loss', AVG_LOSS, epoch+1)
         if not os.path.isdir(model_save_path):
             os.mkdir(model_save_path)
         torch.save(model.embedding_layer.state_dict(), f'{model_save_path}{epoch+1}_{AVG_LOSS:.4f}.pth')
-    TB_WRITER.close()
+        TB_WRITER.close()
     
