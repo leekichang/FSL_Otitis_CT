@@ -1,10 +1,15 @@
 # Byte-compiled / optimized / DLL files
 dataset/
+datasets/
 dataset_crop_112/
+dataset_crop_144/
 dataset_original/
 dataset_unlabeled/
 dataset_unlabeled_crop_112/
+dataset_unlabeled_crop_144/
 venv/
+checkpoints/
+tensorboard/
 __pycache__/
 *.py[cod]
 *$py.class
