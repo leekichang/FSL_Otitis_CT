@@ -36,21 +36,33 @@ if __name__ == '__main__':
     import dataLoader
     TB_DIR = './tensorboard/'
     model = models.Cosine_ResNet50()
-    model_name = f'resnet50_cosine_sim_{args.crop}'
+    model_name = f'resnet50_cosine_sim_{args.crop}_bal_lr-1_scheduler'
     TB_WRITER = tb.SummaryWriter(TB_DIR + model_name)
-    optimizer = optim.Adam(model.embedding_layer.parameters(), lr = 0.001)
+    scheduler_milestones = [150, 180]
+    scheduler_gamma = 0.1
+    learning_rate = 1e-01
+
+    optimizer = optim.SGD(
+        model.embedding_layer.parameters(), lr=learning_rate, momentum=0.9, weight_decay=5e-4
+    )
+    scheduler = optim.lr_scheduler.MultiStepLR(
+        optimizer,
+        milestones=scheduler_milestones,
+        gamma=scheduler_gamma,
+    )
     criterion = nn.MSELoss()
     model_save_path = f'./checkpoints/{model_name}/'
     DM = dataLoader.DataManager(f'./datasets/dataset_crop_{args.crop}/')
     dataset = DM.Load_Dataset()
-    trainLoader = DM.Load_DataLoader(dataset, 171, is_train=True)
+    trainLoader = DM.Load_DataLoader(dataset, 45, is_train=True)
     for idx, epoch in enumerate(tqdm(range(50))):
         LOSS_TRACE = []
         LOSS_TRACE = train(model, optimizer, criterion, trainLoader, LOSS_TRACE)
+        scheduler.step()
         AVG_LOSS = np.average(LOSS_TRACE)
-        TB_WRITER.add_scalar(f'{model_name}: Train Loss', AVG_LOSS, epoch+1)
+        TB_WRITER.add_scalar(f'Train Loss', AVG_LOSS, epoch+1)
         if not os.path.isdir(model_save_path):
             os.mkdir(model_save_path)
-        torch.save(model.embedding_layer.state_dict(), f'{model_save_path}{epoch+1}_{AVG_LOSS:.4f}.pth')
+        torch.save(model.embedding_layer.state_dict(), f'{model_save_path}{epoch+1}.pth')#_{AVG_LOSS:.4f}.pth')
         TB_WRITER.close()
     
